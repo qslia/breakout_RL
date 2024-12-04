@@ -11,13 +11,13 @@ white = (255, 255, 255)
 blue = (0, 0, 255)
 red = (255, 0, 0)
 
-paddle_width = 10
+paddle_width = 200
 paddle_height = 10
 paddle_speed = 10
 
 
 ball_radius = 10
-ball_speed = [5, -5]
+ball_speed = [3, -3]
 
 
 brick_row = 5
@@ -100,7 +100,7 @@ def main():
 
     score = 0
     game_over = False
-    life = 2
+    life = 3
 
 
     reset_game()
@@ -140,9 +140,10 @@ def main():
                 ball_speed[1] = -ball_speed[1]
 
             if ball.bottom >= screen_height:
+
+                life -= 1
                 if life == 0:
                     game_over = True
-                life -= 1
                 reset_game()
 
             if ball.colliderect(paddle):
@@ -163,7 +164,7 @@ def main():
         for brick in bricks:
             pygame.draw.rect(screen, red, brick)
 
-        draw_text(f"score:{score}", font, white, screen, 5, 5)
+        draw_text(f"score:{score}  life: {life}", font, white, screen, 5, 5)
 
         if game_over:
             draw_text(

@@ -49,6 +49,40 @@ def draw_text(text, font, color, surface, x, y, center=False):
 
 # reset game
 def reset_game():
+    global paddle, ball, bricks, score, game_over, life
+
+    paddle = pygame.Rect(
+        screen_width // 2 - paddle_width // 2,
+        screen_height - paddle_height - 10,
+        paddle_width,
+        paddle_height,
+    )
+
+    ball = pygame.Rect(
+        screen_width // 2,
+        screen_height // 2,
+        ball_radius * 2,
+        ball_radius * 2
+    )
+
+    bricks = []
+    for row in range(brick_row):
+        for col in range(brick_cols):
+            bricks.append(
+                pygame.Rect(
+                    brick_offset_left + col * (brick_width + brick_padding),
+                    brick_offset_top + row * (brick_height + brick_padding),
+                    brick_width,
+                    brick_height,
+                )
+            )
+    life = 3
+    game_over = False
+
+    print("GAME RESET")
+
+
+def reset_game2():
     global paddle, ball, bricks, score, game_over
 
     paddle = pygame.Rect(
@@ -65,17 +99,6 @@ def reset_game():
         ball_radius * 2
     )
 
-    # bricks = [
-    #     pygame.Rect(
-    #         brick_offset_left + col * (brick_width + brick_padding),
-    #         brick_offset_top + row * (brick_height + brick_padding),
-    #         brick_width,
-    #         brick_height,
-    #     )
-    #     for row in range(brick_row)
-    #     for col in range(brick_cols)
-    # ]
-
     bricks = []
     for row in range(brick_row):
         for col in range(brick_cols):
@@ -87,21 +110,15 @@ def reset_game():
                     brick_height,
                 )
             )
-            # break
-        # break
-
-
 
     print("GAME RESET")
 
-
 def main():
-    global paddle, ball, bricks, score, game_over
+    global paddle, ball, bricks, score, game_over, life
 
     score = 0
-    game_over = False
     life = 3
-
+    game_over = False
 
     reset_game()
     running = True
@@ -144,7 +161,8 @@ def main():
                 life -= 1
                 if life == 0:
                     game_over = True
-                reset_game()
+                if not game_over:
+                    reset_game2()
 
             if ball.colliderect(paddle):
                 ball_speed[1] = -ball_speed[1]

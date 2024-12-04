@@ -68,13 +68,16 @@ def reset_game():
     bricks = []
     for row in range(brick_row):
         for col in range(brick_cols):
-            bricks.append(
+            bricks.append([
+                row,
+                col,
                 pygame.Rect(
                     brick_offset_left + col * (brick_width + brick_padding),
                     brick_offset_top + row * (brick_height + brick_padding),
                     brick_width,
                     brick_height,
                 )
+                ]
             )
     life = 3
     game_over = False
@@ -102,13 +105,16 @@ def reset_game2():
     bricks = []
     for row in range(brick_row):
         for col in range(brick_cols):
-            bricks.append(
+            bricks.append([
+                row,
+                col,
                 pygame.Rect(
                     brick_offset_left + col * (brick_width + brick_padding),
                     brick_offset_top + row * (brick_height + brick_padding),
                     brick_width,
                     brick_height,
                 )
+                ]
             )
 
     print("GAME RESET")
@@ -168,7 +174,7 @@ def main():
                 ball_speed[1] = -ball_speed[1]
 
             for brick in bricks[:]:
-                if ball.colliderect(brick):
+                if ball.colliderect(brick[2]):
                     ball_speed[1] = -ball_speed[1]
                     bricks.remove(brick)
                     score += 10
@@ -180,7 +186,10 @@ def main():
         pygame.draw.ellipse(screen, blue, ball)
 
         for brick in bricks:
-            pygame.draw.rect(screen, red, brick)
+            if brick[0] % 2 == 0 and brick[1] % 2 == 0:
+                pygame.draw.rect(screen, blue, brick[2])
+            else:
+                pygame.draw.rect(screen, red, brick[2])
 
         draw_text(f"score:{score}  life: {life}", font, white, screen, 5, 5)
 

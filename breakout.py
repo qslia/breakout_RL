@@ -91,13 +91,18 @@ def reset_game():
         # break
 
 
-    score = 0
-    game_over = False
+
     print("GAME RESET")
 
 
 def main():
     global paddle, ball, bricks, score, game_over
+
+    score = 0
+    game_over = False
+    life = 2
+
+
     reset_game()
     running = True
 
@@ -135,7 +140,10 @@ def main():
                 ball_speed[1] = -ball_speed[1]
 
             if ball.bottom >= screen_height:
-                game_over = True
+                if life == 0:
+                    game_over = True
+                life -= 1
+                reset_game()
 
             if ball.colliderect(paddle):
                 ball_speed[1] = -ball_speed[1]

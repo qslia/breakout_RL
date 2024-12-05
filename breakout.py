@@ -179,7 +179,10 @@ def main():
                 if ball.colliderect(brick[2]):
                     ball_speed[1] = -ball_speed[1]
                     bricks.remove(brick)
-                    score += 10
+                    if brick[0] % 2 == 0 and brick[1] % 2 == 0:
+                        score += 20
+                    else:
+                        score += 10
 
         screen.fill(black)
 

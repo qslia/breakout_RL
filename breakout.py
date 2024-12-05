@@ -84,11 +84,11 @@ def reset_game():
     game_over = False
     ball_speed[1] = -ball_speed[1]
 
-    print("GAME RESET")
+    print("GAME START")
 
 
 def reset_game2():
-    global paddle, ball, bricks, score, game_over
+    global paddle, ball, bricks
 
     paddle = pygame.Rect(
         screen_width // 2 - paddle_width // 2,
@@ -103,7 +103,6 @@ def reset_game2():
         ball_radius * 2,
         ball_radius * 2
     )
-
     bricks = []
     for row in range(brick_row):
         for col in range(brick_cols):
@@ -119,6 +118,25 @@ def reset_game2():
                 ]
             )
 
+    print("GAME START")
+
+def reset_game3():
+    global paddle, ball
+
+    paddle = pygame.Rect(
+        screen_width // 2 - paddle_width // 2,
+        screen_height - paddle_height - 10,
+        paddle_width,
+        paddle_height,
+    )
+
+    ball = pygame.Rect(
+        screen_width // 2,
+        screen_height // 2,
+        ball_radius * 2,
+        ball_radius * 2
+    )
+
     print("GAME RESET")
 
 def main():
@@ -127,6 +145,7 @@ def main():
     score = 0
     life = 3
     game_over = False
+    bricks = []
 
     reset_game2()
     running = True
@@ -170,12 +189,12 @@ def main():
                 if life == 0:
                     game_over = True
                 if not game_over:
-                    reset_game2()
+                    reset_game3()
 
             if ball.colliderect(paddle):
                 ball_speed[1] = -ball_speed[1]
 
-            for brick in bricks[:]:
+            for brick in bricks:
                 if ball.colliderect(brick[2]):
                     ball_speed[1] = -ball_speed[1]
                     bricks.remove(brick)

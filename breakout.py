@@ -49,7 +49,7 @@ def draw_text(text, font, color, surface, x, y, center=False):
 
 # reset game
 def reset_game():
-    global paddle, ball, bricks, score, game_over, life
+    global paddle, ball, bricks, score, game_over, life, ball_speed
 
     paddle = pygame.Rect(
         screen_width // 2 - paddle_width // 2,
@@ -80,7 +80,9 @@ def reset_game():
                 ]
             )
     life = 3
+    score = 0
     game_over = False
+    ball_speed[1] = -ball_speed[1]
 
     print("GAME RESET")
 
@@ -126,7 +128,7 @@ def main():
     life = 3
     game_over = False
 
-    reset_game()
+    reset_game2()
     running = True
 
     while running:

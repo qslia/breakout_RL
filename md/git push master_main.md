@@ -270,3 +270,118 @@ git config --global fetch.prune true
 ```
 
 这样以后远程删了分支，本地 fetch 时会自动清理，不用手动 `--prune`。
+
+---
+fatal: The upstream branch of your current branch does not match
+the name of your current branch.  To push to the upstream branch
+on the remote, use
+
+    git push breakout_rl HEAD:master
+
+To push to the branch of the same name on the remote, use
+
+    git push breakout_rl HEAD
+
+To choose either option permanently, see push.default in 'git help config'.
+
+To avoid automatically configuring an upstream branch when its name
+won't match the local branch, see option 'simple' of branch.autoSetupMerge
+in 'git help config'.
+---
+这个错误的原因是：你当前分支的 **upstream（上游）设置** 还指向一个**名字不匹配**的远程分支。
+
+## 出错原因
+
+你现在的状态大概是：
+
+- 本地分支叫 `main`（或已改名）
+- 但它的 upstream 指向 `breakout_rl/master`（旧名字）
+- 远程 `master` 已经被你删掉了
+- 于是 `git push` 发现：本地分支名 ≠ upstream 分支名 → 报错
+
+Git 的 `push.default = simple`（默认）要求：**本地分支名和 upstream 分支名必须一致**，否则拒绝。
+
+---
+
+## 解决方法
+
+### 第一步：重新设置正确的 upstream
+
+把本地 `main` 的 upstream 指向远程 `main`：
+
+```bash
+git branch -u breakout_rl/main main
+```
+
+或者（如果你就在 `main` 分支上）：
+
+```bash
+git branch -u breakout_rl/main
+```
+
+如果远程 `main` 还不存在，第一次 push 时建立：
+
+```bash
+git push -u breakout_rl main
+```
+
+`-u` 会同时创建远程分支并设好 upstream。
+
+### 第二步：验证
+
+```bash
+git branch -vv
+```
+
+输出应该类似：
+
+```
+* main  abc1234 [breakout_rl/main] 你的提交信息
+```
+
+方括号里是 `[breakout_rl/main]` 就对了。如果还显示 `[breakout_rl/master]`，说明 upstream 没改成功。
+
+---
+
+## 如果远程 main 已经存在，且你本地有内容要推
+
+```bash
+git push breakout_rl main:main
+```
+
+或直接：
+
+```bash
+git push breakout_rl HEAD:main
+```
+
+然后设置 upstream：
+
+```bash
+git branch -u breakout_rl/main
+```
+
+---
+
+## 关于那三个提示的含义
+
+Git 给的选项解释：
+
+| 命令 | 含义 |
+|------|------|
+| `git push breakout_rl HEAD:master` | 推到**旧的 upstream 名字** `master`（但你已删了，不适用） |
+| `git push breakout_rl HEAD` | 推到**同名远程分支** `main`（这个通常是你想要的） |
+| 配置 `push.default` | 永久改变默认行为 |
+
+---
+
+## 一句话总结
+
+你只是 upstream 还指向了已删除的 `master`。修复：
+
+```bash
+git branch -u breakout_rl/main
+git push
+```
+
+之后 `git branch -vv` 确认方括号里是 `breakout_rl/main` 即可。
